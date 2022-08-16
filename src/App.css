@@ -1,0 +1,81 @@
+.weatherBackground {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-size: 18px;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    45deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
+  color: #d3d3d3;
+}
+.weatherWrapper {
+  padding: 64px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.searchBarRow {
+  display: flex;
+  align-items: center;
+}
+
+.weatherDetailsWrapper {
+  width: 100%;
+}
+
+.weatherDetailsPrimary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cityName {
+  font-size: 48px;
+  margin: 32px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.temperatureMain {
+  font-size: 64px;
+  margin: 32px;
+  font-weight: 600;
+  color: #fff;
+}
+.weatherPrimaryInner {
+  display: flex;
+  flex-direction: column;
+}
+
+.weatherDetailsSecondary {
+  display: flex;
+  justify-content: center;
+  margin: 16px;
+}
+
+.weatherDetailsSecondary span {
+  font-weight: 600;
+  margin: 0px 8px;
+}
+
+.weatherDesc {
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.weatherIcon {
+  height: 64px;
+  width: 64px;
+}
+
+.noCitySelectedPrompt {
+  padding: 64px;
+}
