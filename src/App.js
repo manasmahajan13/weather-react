@@ -79,17 +79,9 @@ function App() {
   const [citiesList, setCitiesList] = useState([]);
 
   const [weather, setWeather] = useState({});
-  const [searchedCity, setSearchedCity] = useState({});
+  const [searchedCityName, setSearchedCityName] = useState("");
 
   const [locationDateTime, setLocationDateTime] = useState(null);
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
 
   const handleDropdownMenu = (citiesListResponse) => {
     const newCitiesListResponse = citiesListResponse.map((city) => {
@@ -115,7 +107,6 @@ function App() {
       .then(
         (response) => {
           setWeather(response.data);
-          setSearchedCity(query);
           setQuery(null);
         },
         (error) => {
@@ -139,7 +130,7 @@ function App() {
       );
   };
 
-  const getTimezone = () => {
+  const getTimezone = (withName = false) => {
     axios
       .get(
         `http://api.timezonedb.com/v2.1/get-time-zone?key=${timeZoneApi.key}&format=json&by=position&lat=${query.lat}&lng=${query.lon}`
@@ -147,11 +138,27 @@ function App() {
       .then(
         (response) => {
           setLocationDateTime(response.data.formatted);
+          setSearchedCityName(response.data.cityName);
         },
         (error) => {
           console.log(error);
         }
       );
+  };
+
+  const getCurrentLocation = () => {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        setQuery({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+          label: "",
+        });
+      },
+      function (error) {
+        console.error("Error Code = " + error.code + " - " + error.message);
+      }
+    );
   };
 
   useEffect(() => {
@@ -171,7 +178,15 @@ function App() {
   }, [searchTermForCity]);
 
   return (
-    <div className="weatherBackground">
+    <div
+      className="weatherBackground"
+      style={{
+        background:
+          weather?.main?.feels_like > 25
+            ? "linear-gradient(45deg, rgba(224, 123, 76, 1.0), rgba(226, 190, 68, 1.0))"
+            : "linear-gradient(45deg, rgba(2, 0, 36, 1) 0%, rgba(9, 9, 121, 1) 35%, rgba(0, 212, 255, 1) 100%)",
+      }}
+    >
       <div className="weatherWrapper">
         <div className="searchBarRow">
           <Autocomplete
@@ -212,7 +227,7 @@ function App() {
           <IconButton type="submit" sx={{ color: "#fff" }}>
             <SearchIcon />
           </IconButton>
-          <IconButton>
+          <IconButton onClick={getCurrentLocation}>
             <LocationOnIcon sx={{ color: "#fff" }} />
           </IconButton>
         </div>
@@ -223,7 +238,7 @@ function App() {
               time: {moment(locationDateTime).format("hh:mm a")}
             </div>
             <div className="cityName">
-              {searchedCity?.name}, {weather?.sys?.country}
+              {searchedCityName}, {weather?.sys?.country}
             </div>
 
             <div className="weatherDesc">{weather?.weather[0]?.main}</div>
@@ -257,7 +272,11 @@ function App() {
               showThumbs={false}
             >
               {listOfWeatherIcons.map((icon) => {
-                return <div style={{ height: "200px" }}>{icon}</div>;
+                return (
+                  <div style={{ height: "200px" }} key={icon}>
+                    {icon}
+                  </div>
+                );
               })}
             </Carousel>
             <div>Please select a location!</div>
